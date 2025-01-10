@@ -18,16 +18,17 @@ fun BookDetailScreen(book: Book) {
             .padding(16.dp)
     ) {
         Text(
-            text = book.title,
+            text = book.title ?: "Unknown Title",
             style = MaterialTheme.typography.titleLarge
         )
         Text(
-            text = "By ${book.author}",
+            text = "By ${book.author ?: "Unknown Author"}",
             style = MaterialTheme.typography.titleMedium
         )
         Text(
-            text = book.description,
+            text = book.description ?: "No description available",
             style = MaterialTheme.typography.bodyMedium
         )
     }
 }
+

@@ -5,9 +5,13 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.example.mybookfinderapp.screens.BookListScreen
 import com.example.mybookfinderapp.ui.theme.MyBookFinderAppTheme
@@ -38,15 +42,20 @@ fun MainScreen(bookViewModel: BookViewModel) {
     if (books.isEmpty()) {
         EmptyState()
     } else {
-        BookListScreen(books = books, onBookClick = { book ->
-        })
+        BookListScreen(
+            books = books,
+            onBookClick = { book -> /* Handle click */ }
+        )
     }
 }
 
 @Composable
 fun EmptyState() {
-    androidx.compose.material3.Text(
+    Text(
         text = "No books found",
-        modifier = Modifier.fillMaxSize()
+        style = MaterialTheme.typography.bodyLarge,
+        modifier = Modifier
+            .fillMaxSize()
+            .wrapContentSize(Alignment.Center)
     )
 }

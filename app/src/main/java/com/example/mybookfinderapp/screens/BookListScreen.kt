@@ -43,14 +43,14 @@ fun BookListItem(
             .padding(vertical = 8.dp)
     ) {
         Text(
-            text = book.title,
+            text = book.title ?: "Unknown Title", // Handle nullable title
             style = MaterialTheme.typography.titleMedium,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
-            text = "By ${book.author}",
+            text = "By ${book.author ?: "Unknown Author"}", // Handle nullable author
             style = MaterialTheme.typography.bodyMedium,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
