@@ -8,16 +8,16 @@ class BookRepository(private val bookDao: BookDao) {
 
     suspend fun searchBooks(query: String): List<Book> {
         val response = RetrofitInstance.api.searchBooks(query)
-        val sanitizedBooks = response.docs.map { book ->
+        val sanitizedBooks = response.docs.map { apiBook ->
             Book(
-                id = book.id ?: "Unknown ID",
-                title = book.title ?: "Unknown Title",
-                author = book.author ?: "Unknown Author",
-                coverImageUrl = book.coverImageUrl ?: "",
-                description = book.description ?: "No Description Available"
+                id = apiBook.id ?: "Unknown ID",
+                title = apiBook.title ?: "Unknown Title",
+                author = apiBook.author_name?.joinToString(", ") ?: "Unknown Author", // Handle multiple authors
+                coverImageUrl = apiBook.coverImageUrl ?: "",
+                description = apiBook.description ?: "No Description Available"
             )
         }
-        bookDao.insertBooks(sanitizedBooks) // Cache the books locally
+        bookDao.insertBooks(sanitizedBooks)
         return sanitizedBooks
     }
 
