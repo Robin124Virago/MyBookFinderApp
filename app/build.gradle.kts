@@ -66,4 +66,6 @@ dependencies {
     ksp("androidx.room:room-compiler:2.6.1")
 
     implementation("androidx.navigation:navigation-compose:2.8.5")
+
+    implementation("io.coil-kt:coil-compose:2.4.0")
 }

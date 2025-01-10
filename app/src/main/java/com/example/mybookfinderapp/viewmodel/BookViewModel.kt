@@ -15,7 +15,15 @@ class BookViewModel(private val repository: BookRepository) : ViewModel() {
 
     fun searchBooks(query: String) {
         viewModelScope.launch {
-            _books.value = repository.searchBooks(query)
+            val apiBooks = repository.searchBooks(query)
+            _books.value = apiBooks
+        }
+    }
+
+    fun searchCachedBooks(query: String) {
+        viewModelScope.launch {
+            val cachedBooks = repository.searchCachedBooks(query)
+            _books.value = cachedBooks
         }
     }
 

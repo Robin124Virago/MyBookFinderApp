@@ -12,7 +12,7 @@ class BookRepository(private val bookDao: BookDao) {
             Book(
                 id = apiBook.id ?: "Unknown ID",
                 title = apiBook.title ?: "Unknown Title",
-                author = apiBook.author_name?.joinToString(", ") ?: "Unknown Author", // Handle multiple authors
+                author = apiBook.author_name?.joinToString(", ") ?: "Unknown Author",
                 coverImageUrl = apiBook.coverImageUrl ?: "",
                 description = apiBook.description ?: "No Description Available"
             )
@@ -23,5 +23,9 @@ class BookRepository(private val bookDao: BookDao) {
 
     suspend fun getCachedBooks(): List<Book> {
         return bookDao.getBooks()
+    }
+
+    suspend fun searchCachedBooks(query: String): List<Book> {
+        return bookDao.searchBooksByTitle(query)
     }
 }
