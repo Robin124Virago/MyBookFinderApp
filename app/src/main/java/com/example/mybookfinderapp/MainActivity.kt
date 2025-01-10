@@ -5,18 +5,22 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.mybookfinderapp.screens.BookDetailScreen
 import com.example.mybookfinderapp.screens.BookListScreen
 import com.example.mybookfinderapp.ui.theme.MyBookFinderAppTheme
 import com.example.mybookfinderapp.viewmodel.BookViewModel
 import com.example.mybookfinderapp.viewmodel.BookViewModelFactory
+import com.example.mybookfinderapp.navigation.Screen
 
 class MainActivity : ComponentActivity() {
     private val bookViewModel: BookViewModel by viewModels {
@@ -27,7 +31,13 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MyBookFinderAppTheme {
-                MainScreen(bookViewModel)
+                val navController = rememberNavController()
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    MainScreen(navController, bookViewModel)
+                }
             }
         }
 
@@ -36,26 +46,27 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MainScreen(bookViewModel: BookViewModel) {
+fun MainScreen(navController: NavHostController, bookViewModel: BookViewModel) {
     val books by bookViewModel.books.collectAsState()
 
-    if (books.isEmpty()) {
-        EmptyState()
-    } else {
-        BookListScreen(
-            books = books,
-            onBookClick = { book -> /* Handle click */ }
-        )
+    NavHost(
+        navController = navController,
+        startDestination = Screen.BookList.route
+    ) {
+        composable(Screen.BookList.route) {
+            BookListScreen(
+                books = books,
+                onBookClick = { book ->
+                    navController.navigate(Screen.BookDetail.createRoute(book.id))
+                }
+            )
+        }
+        composable(Screen.BookDetail.route) { backStackEntry ->
+            val bookId = backStackEntry.arguments?.getString("bookId")
+            val book = books.find { it.id == bookId }
+            book?.let {
+                BookDetailScreen(book = it)
+            }
+        }
     }
-}
-
-@Composable
-fun EmptyState() {
-    Text(
-        text = "No books found",
-        style = MaterialTheme.typography.bodyLarge,
-        modifier = Modifier
-            .fillMaxSize()
-            .wrapContentSize(Alignment.Center)
-    )
 }
